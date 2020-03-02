@@ -10,9 +10,17 @@ contract SimpleChat {
         string message;
     }
 
+    //Account
+    struct Account{
+        address addr;
+        string name;
+    }
+
     uint public messagesCount;
+    uint public accountsCount;
 
     mapping(uint => Message) public messages;
+    mapping(uint => Account) public accounts;
 
     event sendedEvent ();
 
@@ -26,6 +34,12 @@ contract SimpleChat {
         messages[messagesCount] = Message(messagesCount, msg.sender, parseAddr(receiver), message);
 
         emit sendedEvent();
+    }
+
+    function editAccount(string memory _name) public
+    {
+        accountsCount++;
+        accounts[accountsCount] = Account(msg.sender, _name);
     }
 
     function parseAddr(string memory _a) internal pure returns (address _parsedAddress) {

@@ -71,11 +71,35 @@ App = {
       }
     });
 
+    // Load account Info data
+    App.contracts.SimpleChat.deployed().then(function (instance) 
+    {
+      chatInstance = instance;
+      return chatInstance.accountsCount();
+    
+    }).then(function (accountsCount) {
+      var addrName = $("#accountName");
+      
+      for (var i = 1; i <= accountsCount; i++) {
+        chatInstance.accounts(i).then(function (acc) {
+          var addr = acc[0];
+          var name = acc[1];
+          
+          if (addr === App.account)
+            addrName.html("Your Name <strong>" + name + "</strong>");
+        });
+      }
+    return chatInstance.accounts(App.account);
+    }).catch(function (error) {
+      console.warn(error);
+    });
 
     // Load contract data
-    App.contracts.SimpleChat.deployed().then(function (instance) {
+    App.contracts.SimpleChat.deployed().then(function (instance) 
+    {
       chatInstance = instance;
       return chatInstance.messagesCount();
+    
     }).then(function (messagesCount) {
       if (loaded === false) {
 
@@ -121,6 +145,20 @@ App = {
 
     App.contracts.SimpleChat.deployed().then(function (instance) {
       return instance.sendMessage(receiver, message, { from: App.account });
+    }).then(function (result) {
+      // Wait for votes to update
+      $("#content").hide();
+      $("#loader").show();
+    }).catch(function (err) {
+      console.error(err);
+    });
+  },
+
+  editAccount: function() {
+    var name = $('#nameId').val();
+
+    App.contracts.SimpleChat.deployed().then(function (instance) {
+      return instance.editAccount(name, { from: App.account });
     }).then(function (result) {
       // Wait for votes to update
       $("#content").hide();
