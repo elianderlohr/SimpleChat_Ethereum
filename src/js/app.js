@@ -84,7 +84,8 @@ App = {
       {
         loadedAccount = true;
         var addrName = $("#accountName");
-        
+        addrName.empty(); 
+
         var accId = $("#accountsId");
         accId.empty();
 
@@ -134,16 +135,19 @@ App = {
             var sender = message[1];
             var receiver = message[2];
             var message = message[3];
-            
-            chatTemplate.find('.senderAdressId').text("Sender: " + sender);
-            chatTemplate.find('.messageId').text(message);
 
-            if (receiver === App.account){
-              $('#noMessages').hide();
-              chatRow.append(chatTemplate.html());
-            }
-              
+            chatInstance.accounts(sender).then(function (name1)
+            {
+              var name = name1[1];
 
+              chatTemplate.find('.senderAdressId').text("Sender: " + name);
+              chatTemplate.find('.messageId').text(message);
+
+              if (receiver === App.account){
+                $('#noMessages').hide();
+                chatRow.append(chatTemplate.html());
+              }
+            }); 
           });
         }          
         
