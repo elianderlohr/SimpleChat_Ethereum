@@ -36,9 +36,9 @@
                 <input type="text" class="form-control" id="nameId" aria-describedby="receiver" placeholder="Enter name">
               </div>
             </div>
-            <button type="submit" class="btn btn-primary">save</button>  
+            <button type="submit" class="btn btn-primary">update</button>  
           </form>
-          <br>
+          <br>  
           <form onSubmit="App.render(); return false;">
             <button type="submit" class="btn btn-primary">refresh</button>
             
@@ -58,6 +58,15 @@
           
         </div>
         <br><hr/><br>
+        <form onSubmit="App.getAddress(); return false;">
+          <div class="form-group">
+            <label for="accountsId">Example select</label>
+            <select class="form-control" id="accountsId">
+
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">load</button>
+        </form>
         <form onSubmit="App.sendMessage(); return false;">
           <div class="form-group">
             <div class="form-group">

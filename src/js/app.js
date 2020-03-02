@@ -54,7 +54,9 @@ App = {
   },
 
   render: function () {
+    loadedAccount = false;
     loaded = false;
+
 
     var chatInstance;
     var loader = $("#loader");
@@ -78,17 +80,35 @@ App = {
       return chatInstance.accountsCount();
     
     }).then(function (accountsCount) {
-      var addrName = $("#accountName");
-      
-      for (var i = 1; i <= accountsCount; i++) {
-        chatInstance.accounts(i).then(function (acc) {
-          var addr = acc[0];
-          var name = acc[1];
-          
-          if (addr === App.account)
-            addrName.html("Your Name <strong>" + name + "</strong>");
-        });
-      }
+      if (loadedAccount === false)
+      {
+        loadedAccount = true;
+        var addrName = $("#accountName");
+        
+        var accId = $("#accountsId");
+        accId.empty();
+
+        for (var i = 1; i <= accountsCount; i++) 
+        {
+          chatInstance.accounts_id(i).then(function (acc) 
+          {
+            var addr = acc;
+
+            chatInstance.accounts(addr).then(function (name1)
+            {
+              var name = name1[1];
+
+              console.log(addr + " | " + name + " | " + accountsCount);
+
+              accId.append("<option value='" + addr + "' >" + name + "</ option>");
+    
+              if (addr === App.account)
+                addrName.html("Your Name <strong>" + name + "</strong>");
+            }); 
+          });
+        }
+       
+    }
     return chatInstance.accounts(App.account);
     }).catch(function (error) {
       console.warn(error);
@@ -166,6 +186,14 @@ App = {
     }).catch(function (err) {
       console.error(err);
     });
+  },
+
+  getAddress: function() {
+    var name = $('#accountsId').val();
+
+    var el_down = document.getElementById("receiverId"); 
+    el_down.value = name;
+    
   }
 };
 

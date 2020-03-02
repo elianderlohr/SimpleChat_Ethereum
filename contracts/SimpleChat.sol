@@ -14,13 +14,16 @@ contract SimpleChat {
     struct Account{
         address addr;
         string name;
+        bool exists;
+        uint id;
     }
 
     uint public messagesCount;
     uint public accountsCount;
 
     mapping(uint => Message) public messages;
-    mapping(uint => Account) public accounts;
+    mapping(address => Account) public accounts;
+    mapping(uint => address) public accounts_id;
 
     event sendedEvent ();
 
@@ -38,8 +41,18 @@ contract SimpleChat {
 
     function editAccount(string memory _name) public
     {
-        accountsCount++;
-        accounts[accountsCount] = Account(msg.sender, _name);
+        if (!accounts[msg.sender].exists)
+        {
+            accountsCount++;
+            accounts[msg.sender] = Account(msg.sender, _name, true, accountsCount);
+            accounts_id[accountsCount] = msg.sender;
+        }
+        else
+        {
+            accounts[msg.sender] = Account(msg.sender, _name, true, accountsCount);
+        }
+
+        emit sendedEvent();
     }
 
     function parseAddr(string memory _a) internal pure returns (address _parsedAddress) {
